@@ -7,6 +7,7 @@
   "repository": "git@github.com:Michigan-Tech-Courses/thumbor",
   "author": "Max Isom <hi@maxisom.me>",
   "license": "MIT",
+  "keywords": ["👍", "thumbor", "thumbnail", "image", "generator", "url", "builder", "typescript"],
   "files": [
     "dist",
     "dts"

@@ -1,0 +1,20 @@
+name: Test
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v2
+      
+      - uses: actions/checkout@v1
+
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
+        
+      - name: Run tests & get coverage
+        run: yarn test:coverage
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v1

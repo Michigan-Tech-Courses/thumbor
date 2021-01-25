@@ -1,0 +1,37 @@
+name: Publish
+
+on:
+  push:
+    tags:
+    - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
+     
+      - name: Wait on lint
+        uses: lewagon/wait-on-check-action@v0.2
+        with:
+          ref: ${{ github.sha }}
+          check-name: lint
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+
+      - name: Wait on tests
+        uses: lewagon/wait-on-check-action@v0.2
+        with:
+          ref: ${{ github.sha }}
+          check-name: test
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+
+      - name: Publish
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          access: public

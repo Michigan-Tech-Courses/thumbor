@@ -1,13 +1,22 @@
 {
   "name": "@mtucourses/thumbor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "👍 a URL builder for Thumbor ",
   "main": "dist/index.js",
   "types": "dts/index.d.ts",
   "repository": "git@github.com:Michigan-Tech-Courses/thumbor",
   "author": "Max Isom <hi@maxisom.me>",
   "license": "MIT",
-  "keywords": ["👍", "thumbor", "thumbnail", "image", "generator", "url", "builder", "typescript"],
+  "keywords": [
+    "👍",
+    "thumbor",
+    "thumbnail",
+    "image",
+    "generator",
+    "url",
+    "builder",
+    "typescript"
+  ],
   "files": [
     "dist",
     "dts"

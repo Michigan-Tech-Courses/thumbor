@@ -1,5 +1,7 @@
 # @mtucourses/thumbor
 
+[![codecov](https://codecov.io/gh/Michigan-Tech-Courses/thumbor/branch/master/graph/badge.svg?token=9VE5OLHBUA)](https://codecov.io/gh/Michigan-Tech-Courses/thumbor)
+
 ## 🏗 Usage
 
 ```ts

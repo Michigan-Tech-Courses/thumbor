@@ -12,3 +12,14 @@ test('builds URL correctly', t => {
 
 	t.snapshot(url);
 });
+
+test('builds URL with original dimension parameters', t => {
+	const thumbor = new Thumbor({url: 'https://thumbor.example.com', key: 'a-sample-key'});
+
+	const url = thumbor
+		.setPath('https://images.unsplash.com/photo-1611581893305-ec40e53882fc')
+		.resize('orig', 'orig')
+		.buildURL();
+
+	t.snapshot(url);
+});

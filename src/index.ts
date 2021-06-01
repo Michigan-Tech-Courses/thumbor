@@ -21,8 +21,8 @@ export interface WindowSizeAndPosition {
 
 export interface Parameters {
 	imagePath: string;
-	width: number;
-	height: number;
+	width: number | 'orig';
+	height: number | 'orig';
 	smart: boolean;
 	fitInFlag: boolean;
 	withFlipHorizontally: boolean;
@@ -61,7 +61,7 @@ export class Thumbor {
 		return this;
 	}
 
-	resize(width: number, height: number) {
+	resize(width: Parameters['width'], height: Parameters['height']) {
 		this.parameters.width = width;
 		this.parameters.height = height;
 		this.parameters.fitInFlag = false;

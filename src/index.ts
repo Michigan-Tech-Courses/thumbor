@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import {isDefined} from './utils';
 
 export enum VERTICAL_POSITION {
 	TOP = 'TOP',
@@ -149,8 +150,8 @@ export class Thumbor {
 		}
 
 		if (
-			this.parameters.width ||
-      this.parameters.height ||
+			isDefined(this.parameters.width) ||
+      isDefined(this.parameters.height) ||
       this.parameters.withFlipHorizontally ||
       this.parameters.withFlipVertically
 		) {

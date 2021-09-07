@@ -26,6 +26,7 @@ export interface Parameters {
 	height: number | 'orig';
 	smart: boolean;
 	fitInFlag: boolean;
+	fitInAdaptive: boolean;
 	withFlipHorizontally: boolean;
 	withFlipVertically: boolean;
 	halignValue?: HORIZONTAL_POSITION;
@@ -40,6 +41,7 @@ const DEFAULT_PARAMETERS: Parameters = {
 	height: 0,
 	smart: false,
 	fitInFlag: false,
+	fitInAdaptive: false,
 	withFlipHorizontally: false,
 	withFlipVertically: false,
 	filtersCalls: []
@@ -74,10 +76,11 @@ export class Thumbor {
 		return this;
 	}
 
-	fitIn(width: number, height: number) {
+	fitIn(width: number, height: number, adaptive = false) {
 		this.parameters.width = width;
 		this.parameters.height = height;
 		this.parameters.fitInFlag = true;
+		this.parameters.fitInAdaptive = adaptive;
 		return this;
 	}
 
@@ -146,7 +149,11 @@ export class Thumbor {
 		}
 
 		if (this.parameters.fitInFlag) {
-			parts.push('fit-in');
+			parts.push(
+				this.parameters.fitInAdaptive
+					? 'adaptative-fit-in'
+					: 'fit-in'
+			);
 		}
 
 		if (

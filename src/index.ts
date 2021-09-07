@@ -1,6 +1,11 @@
 import crypto from 'crypto';
 import {isDefined} from './utils';
 
+export enum FIT_IN_TYPE {
+	FULL = 'FULL',
+	ADAPTIVE = 'ADAPTIVE'
+}
+
 export enum VERTICAL_POSITION {
 	TOP = 'TOP',
 	MIDDLE = 'MIDDLE',
@@ -26,7 +31,7 @@ export interface Parameters {
 	height: number | 'orig';
 	smart: boolean;
 	fitInFlag: boolean;
-	fitInAdaptive: boolean;
+	fitInType?: FIT_IN_TYPE;
 	withFlipHorizontally: boolean;
 	withFlipVertically: boolean;
 	halignValue?: HORIZONTAL_POSITION;
@@ -41,7 +46,6 @@ const DEFAULT_PARAMETERS: Parameters = {
 	height: 0,
 	smart: false,
 	fitInFlag: false,
-	fitInAdaptive: false,
 	withFlipHorizontally: false,
 	withFlipVertically: false,
 	filtersCalls: []
@@ -68,6 +72,7 @@ export class Thumbor {
 		this.parameters.width = width;
 		this.parameters.height = height;
 		this.parameters.fitInFlag = false;
+		this.parameters.fitInType = undefined;
 		return this;
 	}
 
@@ -76,11 +81,11 @@ export class Thumbor {
 		return this;
 	}
 
-	fitIn(width: number, height: number, adaptive = false) {
+	fitIn(width: number, height: number, type?: FIT_IN_TYPE) {
 		this.parameters.width = width;
 		this.parameters.height = height;
 		this.parameters.fitInFlag = true;
-		this.parameters.fitInAdaptive = adaptive;
+		this.parameters.fitInType = type;
 		return this;
 	}
 
@@ -149,11 +154,21 @@ export class Thumbor {
 		}
 
 		if (this.parameters.fitInFlag) {
-			parts.push(
-				this.parameters.fitInAdaptive
-					? 'adaptative-fit-in'
-					: 'fit-in'
-			);
+			let fitType;
+
+			switch (this.parameters.fitInType) {
+				case FIT_IN_TYPE.FULL:
+					fitType = 'full-fit-in';
+					break;
+				case FIT_IN_TYPE.ADAPTIVE:
+					fitType = 'adaptative-fit-in';
+					break;
+				default:
+					fitType = 'fit-in';
+					break;
+			}
+
+			parts.push(fitType);
 		}
 
 		if (

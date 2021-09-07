@@ -30,6 +30,7 @@ export interface Parameters {
 	width: number | 'orig';
 	height: number | 'orig';
 	smart: boolean;
+	trimFlag: boolean;
 	fitInFlag: boolean;
 	fitInType?: FIT_IN_TYPE;
 	withFlipHorizontally: boolean;
@@ -45,6 +46,7 @@ const DEFAULT_PARAMETERS: Parameters = {
 	width: 0,
 	height: 0,
 	smart: false,
+	trimFlag: false,
 	fitInFlag: false,
 	withFlipHorizontally: false,
 	withFlipVertically: false,
@@ -79,6 +81,10 @@ export class Thumbor {
 	smartCrop(smartCrop: boolean) {
 		this.parameters.smart = smartCrop;
 		return this;
+	}
+
+	trim() {
+		this.parameters.trimFlag = true;
 	}
 
 	fitIn(width: number, height: number, type?: FIT_IN_TYPE) {
@@ -143,6 +149,10 @@ export class Thumbor {
 
 	private getURLParts() {
 		const parts = [];
+
+		if (this.parameters.trimFlag) {
+			parts.push('trim');
+		}
 
 		if (this.parameters.cropValues) {
 			parts.push(

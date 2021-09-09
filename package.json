@@ -1,6 +1,6 @@
 {
   "name": "@mtucourses/thumbor",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "👍 a URL builder for Thumbor ",
   "main": "dist/index.js",
   "types": "dts/index.d.ts",

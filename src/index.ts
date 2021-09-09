@@ -41,22 +41,24 @@ export interface Parameters {
 	filtersCalls: string[];
 }
 
-const DEFAULT_PARAMETERS: Parameters = {
-	imagePath: '',
-	width: 0,
-	height: 0,
-	smart: false,
-	trimFlag: false,
-	withFlipHorizontally: false,
-	withFlipVertically: false,
-	filtersCalls: []
-};
+function getDefaultParameters(): Parameters {
+	return {
+		imagePath: '',
+		width: 0,
+		height: 0,
+		smart: false,
+		trimFlag: false,
+		withFlipHorizontally: false,
+		withFlipVertically: false,
+		filtersCalls: []
+	};
+}
 
 export class Thumbor {
 	private readonly url: string;
 	private readonly key?: string;
 
-	private parameters: Parameters = DEFAULT_PARAMETERS;
+	private parameters: Parameters = getDefaultParameters();
 
 	constructor({url, key}: {url: string; key?: string}) {
 		this.url = url;
@@ -83,6 +85,7 @@ export class Thumbor {
 
 	trim() {
 		this.parameters.trimFlag = true;
+		return this;
 	}
 
 	fitIn(width: number, height: number, type = FIT_IN_TYPE.DEFAULT) {
@@ -134,12 +137,12 @@ export class Thumbor {
 				.digest('base64')
 				.replace(/\+/g, '-').replace(/\//g, '_');
 
-			this.parameters = DEFAULT_PARAMETERS;
+			this.parameters = getDefaultParameters();
 
 			return this.url + '/' + digest + '/' + dataToEncrypt;
 		}
 
-		this.parameters = DEFAULT_PARAMETERS;
+		this.parameters = getDefaultParameters();
 
 		return this.url + '/unsafe/' + dataToEncrypt;
 	}

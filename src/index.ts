@@ -41,24 +41,22 @@ export interface Parameters {
 	filtersCalls: string[];
 }
 
-function getDefaultParameters(): Parameters {
-	return {
-		imagePath: '',
-		width: 0,
-		height: 0,
-		smart: false,
-		trimFlag: false,
-		withFlipHorizontally: false,
-		withFlipVertically: false,
-		filtersCalls: []
-	};
-}
+const defaultParametersFactory = (): Parameters => ({
+	imagePath: '',
+	width: 0,
+	height: 0,
+	smart: false,
+	trimFlag: false,
+	withFlipHorizontally: false,
+	withFlipVertically: false,
+	filtersCalls: []
+});
 
 export class Thumbor {
 	private readonly url: string;
 	private readonly key?: string;
 
-	private parameters: Parameters = getDefaultParameters();
+	private parameters: Parameters = defaultParametersFactory();
 
 	constructor({url, key}: {url: string; key?: string}) {
 		this.url = url;
@@ -137,12 +135,12 @@ export class Thumbor {
 				.digest('base64')
 				.replace(/\+/g, '-').replace(/\//g, '_');
 
-			this.parameters = getDefaultParameters();
+			this.parameters = defaultParametersFactory();
 
 			return this.url + '/' + digest + '/' + dataToEncrypt;
 		}
 
-		this.parameters = getDefaultParameters();
+		this.parameters = defaultParametersFactory();
 
 		return this.url + '/unsafe/' + dataToEncrypt;
 	}

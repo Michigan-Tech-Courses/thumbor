@@ -1,6 +1,12 @@
 import crypto from 'crypto';
 import {isDefined} from './utils';
 
+export enum FIT_IN_TYPE {
+	DEFAULT = 'DEFAULT',
+	FULL = 'FULL',
+	ADAPTIVE = 'ADAPTIVE'
+}
+
 export enum VERTICAL_POSITION {
 	TOP = 'TOP',
 	MIDDLE = 'MIDDLE',
@@ -25,7 +31,8 @@ export interface Parameters {
 	width: number | 'orig';
 	height: number | 'orig';
 	smart: boolean;
-	fitInFlag: boolean;
+	trimFlag: boolean;
+	fitInType?: FIT_IN_TYPE;
 	withFlipHorizontally: boolean;
 	withFlipVertically: boolean;
 	halignValue?: HORIZONTAL_POSITION;
@@ -34,22 +41,22 @@ export interface Parameters {
 	filtersCalls: string[];
 }
 
-const DEFAULT_PARAMETERS: Parameters = {
+const defaultParametersFactory = (): Parameters => ({
 	imagePath: '',
 	width: 0,
 	height: 0,
 	smart: false,
-	fitInFlag: false,
+	trimFlag: false,
 	withFlipHorizontally: false,
 	withFlipVertically: false,
 	filtersCalls: []
-};
+});
 
 export class Thumbor {
 	private readonly url: string;
 	private readonly key?: string;
 
-	private parameters: Parameters = DEFAULT_PARAMETERS;
+	private parameters: Parameters = defaultParametersFactory();
 
 	constructor({url, key}: {url: string; key?: string}) {
 		this.url = url;
@@ -65,7 +72,7 @@ export class Thumbor {
 	resize(width: Parameters['width'], height: Parameters['height']) {
 		this.parameters.width = width;
 		this.parameters.height = height;
-		this.parameters.fitInFlag = false;
+		this.parameters.fitInType = undefined;
 		return this;
 	}
 
@@ -74,10 +81,15 @@ export class Thumbor {
 		return this;
 	}
 
-	fitIn(width: number, height: number) {
+	trim() {
+		this.parameters.trimFlag = true;
+		return this;
+	}
+
+	fitIn(width: number, height: number, type = FIT_IN_TYPE.DEFAULT) {
 		this.parameters.width = width;
 		this.parameters.height = height;
-		this.parameters.fitInFlag = true;
+		this.parameters.fitInType = type;
 		return this;
 	}
 
@@ -123,18 +135,22 @@ export class Thumbor {
 				.digest('base64')
 				.replace(/\+/g, '-').replace(/\//g, '_');
 
-			this.parameters = DEFAULT_PARAMETERS;
+			this.parameters = defaultParametersFactory();
 
 			return this.url + '/' + digest + '/' + dataToEncrypt;
 		}
 
-		this.parameters = DEFAULT_PARAMETERS;
+		this.parameters = defaultParametersFactory();
 
 		return this.url + '/unsafe/' + dataToEncrypt;
 	}
 
 	private getURLParts() {
 		const parts = [];
+
+		if (this.parameters.trimFlag) {
+			parts.push('trim');
+		}
 
 		if (this.parameters.cropValues) {
 			parts.push(
@@ -145,8 +161,18 @@ export class Thumbor {
 			);
 		}
 
-		if (this.parameters.fitInFlag) {
-			parts.push('fit-in');
+		switch (this.parameters.fitInType) {
+			case FIT_IN_TYPE.DEFAULT:
+				parts.push('fit-in');
+				break;
+			case FIT_IN_TYPE.FULL:
+				parts.push('full-fit-in');
+				break;
+			case FIT_IN_TYPE.ADAPTIVE:
+				parts.push('adaptative-fit-in');
+				break;
+			default:
+				break;
 		}
 
 		if (
